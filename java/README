@@ -1,0 +1,17 @@
+
+Requirements: Java 1.5, ant 1.6.2, (optional) JFlex.
+
+build.xml properties (run "ant -Dname=value"):
+
+  debug: if true, compile with "-g -deprecation -Xlint:all" (default)
+         else compile with "-g:none -nowarn"
+
+  jflex.jar: full path to JFlex.jar, default: ../ext/JFlex.jar
+
+"scanner" target is optional. It generates STARLexer.java from star.flex
+(requires JFlex).
+
+ant sans.compile: compiles classes into build/
+ant sans.jar:     builds dist/sans.TIMESTAMP.jar -- sans classes only
+ant sans.tar:     builds dist/sans.TIMESTAMP.tar.gz -- source package
+ant sans.javadoc: builds Javadoc in doc/javadoc

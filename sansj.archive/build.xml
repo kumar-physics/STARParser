@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="sansj" default="compile">
+  <dirname property="basedir" file="${ant.file.sansj}"/>
+
+  <property name="debug" value="true"/>
+  <condition property="build-type" value="debug">
+    <istrue value="${debug}"/>
+  </condition>
+  <condition property="build-type" value="release">
+    <not>
+      <istrue value="${debug}"/>
+    </not>
+  </condition>
+
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="dist.dir" value="${basedir}/dist"/>
+  <property name="doc.dir" value="${basedir}/doc"/>
+  <property name="javadoc.dir" value="${doc.dir}/javadoc"/>
+  
+  <property name="extlibs" value="/bmrb/javaclasses/JFlex/lib"/>
+  <property name="jflex.jar" value="${extlibs}/JFlex.jar"/>
+  
+  <taskdef name="jflex" classname="JFlex.anttask.JFlexTask" classpath="${jflex.jar}"/>
+
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${doc.dir}"/>
+    <tstamp/>
+  </target>
+
+  <target name="scanner"
+   description="generate scanner class">
+    <jflex file="${src.dir}/EDU/bmrb/sansj/star.flex" verbose="on"/>
+  </target>
+  
+  <target name="compile" depends="init"
+   description="compile sans classes">
+    <antcall target="compile.${build-type}"/>
+  </target>
+
+  <target name="compile.debug">
+    <replace summary="yes" dir="${src.dir}"
+             token="boolean DEBUG = false;"
+	     value="boolean DEBUG = true;">
+      <include name="**/*.java"/>
+    </replace>
+    <javac srcdir="${src.dir}" destdir="${build.dir}"
+           debug="on">
+      <compilerarg line="-g -deprecation -Xlint:all"/>
+    </javac>
+  </target>
+
+  <target name="compile.release">
+    <replace summary="yes" dir="${src.dir}"
+             token="boolean DEBUG = true;"
+	     value="boolean DEBUG = false;">
+      <include name="**/*.java"/>
+    </replace>
+    <javac srcdir="${src.dir}" destdir="${build.dir}"
+           optimize="on">
+      <compilerarg line="-g:none -nowarn"/>
+    </javac>
+  </target>
+
+  <target name="jar" description="create JAR" depends="compile">
+    <jar destfile="${dist.dir}/sansj.${DSTAMP}.jar">
+      <fileset dir="${build.dir}" includes="**/*.class"/>
+    </jar>
+  </target>
+
+  <target name="tar" depends="clean, init"
+  description="create tarball with source and build files">
+    <tar destfile="${dist.dir}/sansj.${DSTAMP}.tar">
+      <tarfileset dir="${src.dir}" prefix="sansj/src">
+        <include name="**/*.java"/>
+        <include name="**/*.html"/>
+        <include name="**/*.flex"/>
+      </tarfileset>
+      <tarfileset dir="${doc.dir}" prefix="sansj/doc">
+        <include name="DESCRIPTION"/>
+      </tarfileset>
+      <tarfileset dir="${basedir}" prefix="sansj">
+        <include name="build.xml"/>
+        <include name="README"/>
+        <include name="COPYRIGHT"/>
+        <include name="test*.str"/>
+      </tarfileset>
+    </tar>
+    <gzip destfile="${dist.dir}/sansj.${DSTAMP}.tar.gz" src="${dist.dir}/sansj.${DSTAMP}.tar"/>
+    <delete file="${dist.dir}/sansj.${DSTAMP}.tar"/>
+  </target>
+
+  <target name="javadoc" description="generate API Javadoc">
+    <mkdir dir="${javadoc.dir}"/>
+    <javadoc destdir="${javadoc.dir}"
+             verbose="no"
+	     author="false"
+	     version="false"
+	     use="false"
+	     windowtitle="SANSj API"
+	     doctitle="SANSj API"
+	     bottom="&lt;EM&gt;Copyright &#169; 2005-2006 Board of Regents, University of Wisconsin. All Rights Reserved.&lt;/EM&gt;">
+      <fileset dir="${src.dir}" includes="**/*.java"/>
+    </javadoc>
+  </target>
+  
+  <target name="clean" description="cleanup">
+    <delete dir="${javadoc.dir}"/>
+    <delete>
+      <fileset dir="${build.dir}" includes="**/*.class"/>
+      <fileset dir="${src.dir}" includes="**/*~" defaultexcludes="no"/>
+    </delete>
+  </target>
+</project>

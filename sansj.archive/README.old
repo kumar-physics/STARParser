@@ -1,0 +1,46 @@
+SANS: Simple API for NMR-STAR
+-----------------------------
+
+  Simple API for NMR-STAR (SANS) is modelled after Simple API for XML (SAX). 
+  SANS is a simple NMR-STAR parser that parses input line-by-line and either
+  
+    calls user-defined methods (callbacks) for each element of NMR-STAR 
+    syntax it encouters, or
+    
+    writes those elements to java.io.Writer (so that they can be passed to
+    e.g. Starlib parser; see Combined.java in doc/examples subdirectory).
+
+  SansParser in this package also does minimal syntax checking.
+
+FILES
+-----
+
+EDU/bmrb/sansj: java sources
+
+  ContentHandler: callbacks for valid tokens.
+  
+  ErrorHandler: callbacks for syntax errors.
+
+  SansParser is a JavaCC-generated parser.
+    Note that SansParser is an NMR-STAR (not generic STAR) parser. NMR-STAR 
+    syntax is more restrictive than generic STAR, this parser is not suitable 
+    for parsing generic STAR files.
+    
+ SansException is an object for passing parse errors around (mainly because 
+ that's how org.xml.sax.ErrorHandler methods do it). It is also thrown by the 
+ parser if you try to use it without registering the handlers first.
+
+  Undocumented classes: JavaCC generates a number of support classes for
+  SansParser. These are not documented here; refer to JavaCC documentation.
+
+doc: javadoc documentation
+
+doc/examples: usage examples
+
+    Simple.java: basic usage example
+    
+    EntryInfo.java: extracts entry information from NMR-STAR file
+    
+    Combined.java: uses SANS parser to skip to a particular saveframe,
+    then uses starlib parser to parse that saveframe into a SaveFrameNode.
+

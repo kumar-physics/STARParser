@@ -1,0 +1,10 @@
+
+Callback-based STAR parsers.
+
+Not all versions are actively maintained, C++ version in particular
+is not getting as much attention as the others.
+
+Java version has the best detailed documentation.
+
+There are *test* programs/scripts in every version, these can be used
+to check for NMR-STAR syntax errors.

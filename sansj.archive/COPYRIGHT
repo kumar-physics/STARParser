@@ -1,0 +1,19 @@
+ *
+ * This software is copyright (c) 2002 Board of Regents, University of Wisconsin.
+ * All Rights Reserved.
+ *
+ * FILE:        $Source: /cvs_archive/cvs/sansj/COPYRIGHT,v $
+ * 
+ * AUTHOR:      $Author: dmaziuk $
+ * DATE:        $Date: 2003/01/10 22:01:18 $
+ * 
+ * UPDATE HISTORY:
+ * ---------------
+ * $Log: COPYRIGHT,v $
+ * Revision 1.1.1.1  2003/01/10 22:01:18  dmaziuk
+ * initial import
+ *
+ * Revision 1.2  2002/12/05 19:56:06  dmaziuk
+ * new version with jflex-based parser
+ *
+ *

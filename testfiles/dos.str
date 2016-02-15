@@ -1,0 +1,34 @@
+#
+# broken: "ms-dos" line endings
+#
+data_/ebi/msd/nmrqual/recoord/coords_only.050413/1hue/1hue.str
+
+#
+# This NMR-STAR file was created by the CcpNmr FormatConverter software
+# developed by the MSD group at the European Bioinformatics Institute (EBI).
+# See http://www.ccpn.ac.uk/ or http://www.ebi.ac.uk/msd-srv/docs/NMR/main.html
+# for more information on this software and the CCPN project.
+#
+    
+save_global_MR_file_characteristics
+   _File_characteristics.Sf_category file_characteristics
+
+save_
+
+save_assembly_1hue
+   _Assembly.Sf_category assembly
+   _Assembly.ID 1
+   _Assembly.Name 1hue
+   loop_
+      _Entity_assembly.Assembly_ID
+      _Entity_assembly.ID
+      _Entity_assembly.Entity_ID
+      _Entity_assembly.Entity_label
+
+1 1 1 $molecule_1
+1 2 1 $molecule_1
+
+   stop_
+
+save_
+

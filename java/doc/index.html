@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+  <TITLE>SANS package</TITLE>
+</head>
+<body bgcolor="white">
+
+<H1>Simple API for NMR-STAR.</H1>
+
+<P>
+  SANS (Simple API for NMR-STAR) is modelled after Simple API for XML (SAX). 
+  Like SAX parsers, SANS parses input line-by-line and calls user-defined 
+  methods (callbacks) for each element of NMR-STAR syntax it encounters.
+
+<DIV>
+ <P>
+  <A href="javadoc/">API Javadoc</A>
+</DIV>
+
+<H2>Requirements</H2>
+<P>
+ <UL>
+   <LI>Java 1.5</LI>
+   <LI>Apache ant 1.6.2</LI>
+   <LI>JFlex -- optional, to re-generate the scanner class</LI>
+ </UL>
+
+<H2>Download and building</H2>
+<P>
+ File <CODE>sans.DATESTAMP.tar.gz</CODE> contains source code and ant
+ build file. Download and unpack the tarball, cd to sans subdirectory
+ and run
+ <DL>
+  <DT>ant -Ddebug="false" jar</DT>
+  <DD>creates JAR with .class files</DD>
+  
+  <DT>ant javadoc</DT>
+  <DD>creates Javadoc API documentation</DD>
+ </DL>
+<P>
+ When building the JAR, run <CODE>ant -Ddebug="false"</CODE> to build classes
+ without debugging information and output, <CODE>ant -Ddebug="true"</CODE> to
+ include debugging information and (lots of) run-time debug messages (default).
+
+<H2>Usage</H2>
+<P>
+ Pick one of the <CODE>ContentHandler</CODE> interfaces and a parser the suits your
+ requirements (see below for details). Write a class that implements that interface,
+ and <CODE>ErrorHandler</CODE> interface.
+<P>
+ Code to call the parser:
+ <PRE>
+    edu.bmrb.sans.STARLexer lex = new edu.bmrb.sans.STARLexer( in );
+    Parser p = new Parser( lex, this, this ); 
+    p.parse();
+    in.close();
+ </PRE>
+ (where <CODE>in</CODE> is the input stream, <code>this</code> is the class you wrote,
+ and <CODE>Parser</CODE> is the parser class of your choice).
+<P>
+ If there is no suitable parser in this package, you can easily write your
+ own using one of the existing ones as a template/starting point: STAR
+ syntax is simple enough so a parser can be hand-written without much trouble.
+ (If you roll your own parser, it probably should not be placed in sans package.)
+<P>
+ Your class must implement all callback methods defined by <CODE>*Handler*</CODE>
+ interfaces. These methods are called when the parser encounters STAR tokens
+ and errors or warnings. Most of them return a boolean "stop parsing" flag.
+<P>
+ Parser errors defined in <code>ErrorHandler</code> interface:
+ <ul>
+   <li>fatalError</li>
+   <li>error</li>
+   <li>warning</li>
+ </ul>
+(<code>fatalError</code> callback has no return value, it exits the parser right away.
+Others can return <code>true</code> to stop parsing or <code>false</code> to ignore
+the error/warning and keep parsing.)
+<P> 
+ STAR tokens (some or all of, dep. on the parser):
+ <UL>
+  <LI>start of data block</LI>
+  <LI>end of data block</LI>
+  <LI>start of a saveframe</LI>
+  <LI>end of a saveframe</LI>
+  <LI>start of loop</LI>
+  <LI>end of loop</LI>
+  <LI>tag</LI>
+  <LI>value</LI>
+ </UL>
+ <code>ContentHandler2</code> interface defines callback methods for all of the
+ above. Value of the token: name of the data block, name of the saveframe, tag, etc.
+ is passed to the callback method as parameter. It's up to the callback to do something
+ with the value.
+<P>
+ <code>ContentHandler</code> interface defines one <code>data</code> callback for tag/value
+ pair, with a "loop flag": true if tag is in a loop, false for free tags. 
+<P>
+ The only callback that has no return value is "end of data block": in both NMR-STAR and mmCIF
+ end of data block is also the end of file. With other callbacks, you can return <CODE>true</CODE>
+ to stop the parser and exit its <CODE>parse()</CODE> method -- e.g. to save time by interrupting
+ the parser after you've got the values you're interested in and you don't need to parse through
+ the rest of the file.
+<P>
+ Although all callbacks must be implemented, some may never be called, depending on the parser.
+ E.g. mmCIF parser will never call start and end of a saveframe methods.
+<P>
+ Note that input stream's seek position does not change until you close the input stream.
+ You can resume parsing from the same spot later (by calling <code>parse()</code> again), or pass
+ the input stream to another parser (e.g. starlibj).
+<P>
+ You can also rewind the input stream using either parser's <CODE>pushBack()</CODE> method
+ or the stream's <CODE>mark()</CODE> and <CODE>reset()</CODE> methods (if supported).
+<P>
+ To change parser's input stream, call <CODE>STARLexer</CODE>'s <CODE>reset()</CODE> method.
+<HR>
+</body>
+</html>

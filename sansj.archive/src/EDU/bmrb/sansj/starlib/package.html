@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)package.html	1 Fri May 31 18:05:49 CDT 2002
+
+  Copyright 2002 Board of Regents, University of Wisconsin,
+  Madison, Wisconsin, U.S.A. All Rights Reserved.
+
+-->
+</head>
+<body bgcolor="white">
+
+<P>
+  <CODE>StarNode</CODE> definitions for SANS parser.
+
+<h2>Package Details</h2>
+<P>
+ <CODE>StarNode</CODE> classes in this package are similar to corresponding
+ classes in <CODE>starlibj</CODE>. Unlike <CODE>starlibj</CODE> classes, 
+ these have no <CODE>search*</CODE> and <CODE>Unparse()</CODE> methods, and
+ are serializable.
+ 
+<H2>Classes</H2>
+<H3>{@link EDU.bmrb.sansj.starlib.StarNode StarNode}</H3>
+<P>
+ Parent class for all nodes. Unlike its <CODE>starlibj</CODE> counterpart,
+ it has a value and <CODE>get/setValue()</CODE> methods. What the value is
+ depends on the node: for <CODE>DataValueNode</CODE> it's the value, for
+ node generated at start of saveframe it's saveframe name, etc.
+
+<H3>{@link EDU.bmrb.sansj.starlib.DataNameNode DataNameNode}</H3>
+<P>
+ Identical to <CODE>StarNode</CODE> above, stores STAR tag.
+
+<H3>{@link EDU.bmrb.sansj.starlib.DataValueNode DataValueNode}</H3>
+<P>
+ STAR value.
+</P>
+</body>
+</html>

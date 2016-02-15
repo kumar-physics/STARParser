@@ -1,0 +1,19 @@
+data_bla
+
+    loop_
+       _entity.id
+       _entity.type
+       _entity.src_method
+       _entity.pdbx_description
+       _entity.formula_weight
+       _entity.pdbx_number_of_molecules
+       _entity.details
+       _entity.pdbx_mutation
+       _entity.pdbx_fragment
+       _entity.pdbx_ec
+
+       1 polymer man         LMO4 13017.570       1 bla "'C37S," C49S' . 
+       . 2       non-polymer syn  "ZINC ION" 65.380 2    .       .     . 
+       . .       .           .            .       . .    .       .     . 
+    stop_
+

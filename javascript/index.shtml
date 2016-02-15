@@ -1,0 +1,35 @@
+<!--#include virtual="/includes/header0.shtml" -->
+
+<!-- to display the "last modified" date of the right file in the footer -->
+<!--#set var="LASTMOD" value="$LAST_MODIFIED" -->
+
+<title>NMR-STAR interactive editor</title>
+<!--<script src="jquery.min.js"></script>-->
+<script src="schema.js"></script>
+<script src="sprintf.js"></script>
+<script src="starlib.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<!--#include virtual="/includes/header1.shtml" -->
+
+<div class="contentWrap">
+    <form method="POST" action="" id="upload" enctype="multipart/form-data">
+        <div>
+            <P>File: <input type="file" id="nmrstar_file" name="nmrstar_file" size="46" onchange="openFile()"></P>
+            <input type="button" onclick="star.download()" value="Download">
+            <input type="button" onclick="openFile()" value="Reload original file">
+            <div id="dynamic_anchor"></div>
+            <pre>
+                <div id="parser_messages"></div>
+            </pre>
+        </div>
+    </form>
+</div>
+
+<script>
+the_entry = getURLParameter("entry");
+if (the_entry != null){
+    openURL("/ftp/pub/bmrb/entry_directories/bmr" + the_entry + "/bmr" + the_entry + "_3.str");
+}
+</script>
+<!--#include virtual="/includes/footer.shtml" -->

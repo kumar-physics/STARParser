@@ -1,0 +1,56 @@
+# comment
+data_validict
+### another comment
+    save_DBNAMES
+        loop_
+            _SEQ
+            _DBTABLE
+            _DBCOLUMN
+            _DBTYPE
+            _NOT_NULL
+            _DBPK
+            _DBFKTABLE
+            _DBFKCOLUMN
+            _DBFKGROUP
+
+            10       $EntryInterview                    SfCategory                        VARCHAR(31)             Y    N    .                                  .                   .   
+            3060     AssemblyType                      SfID                              INTEGER                 Y    Y    Assembly                           Sf_ID               .   
+        stop_
+	
+        loop_
+            _DMODE
+            _VERSION
+            _DICTFLAG
+
+            2    .   Y
+        stop_
+    save_
+
+    save_SFCATS
+        loop_
+            _ID
+            _SFCAT
+            _UNIQ
+            _MANDATORY
+
+            8      $entry_interview                     Y    M    
+        stop_
+    save_
+
+    save_SFMANENUM
+        loop_
+            _MANDATORY
+            _DESCRIPTION
+
+            I    
+;
+	    _test                       
+	    Multi-line
+	    vALUE
+	    data_testing
+;
+            $M    'mandatory, must be present'  
+            O    "data_optional"
+        stop_
+    save_
+

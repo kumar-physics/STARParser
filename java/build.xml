@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="sans" default="compile">
+
+  <dirname property="basedir" file="${ant.file.sans}"/>
+
+  <condition property="build-type" value="debug">
+    <istrue value="${debug}"/>
+  </condition>
+  <condition property="build-type" value="release">
+    <istrue value="${release}"/>
+  </condition>
+  <condition property="build-type" value="devel">
+    <and>
+      <not>
+        <istrue value="${debug}"/>
+      </not>
+      <not>
+        <istrue value="${release}"/>
+      </not>
+    </and>
+  </condition>
+
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="dist.dir" value="${basedir}/dist"/>
+  <property name="doc.dir" value="${basedir}/doc"/>
+  <property name="javadoc.dir" value="${doc.dir}/api"/>
+  
+  <property name="extlibs" value="/share/dmaziuk/lib"/>
+  <property name="jflex.jar" value="${extlibs}/JFlex.jar"/>
+  
+  <taskdef name="jflex" classname="JFlex.anttask.JFlexTask" classpath="${jflex.jar}"/>
+
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <mkdir dir="${doc.dir}"/>
+    <tstamp/>
+    <condition property="jar-name" value="sans.${DSTAMP}.jar">
+      <istrue value="${release}"/>
+    </condition>
+    <condition property="jar-name" value="sans.jar">
+      <not>
+        <istrue value="${release}"/>
+      </not>
+    </condition>
+    <uptodate property="scanner.up-to-date"
+      srcfile="${src.dir}/edu/bmrb/sans/star.flex"
+      targetfile="${src.dir}/edu/bmrb/sans/STARLexer.java"/>
+  </target>
+
+  <target name="scanner" unless="scanner.up-to-date"
+   description="generate scanner class">
+<!--    <jflex file="${sans.src.dir}/edu/bmrb/sans/star5.flex" verbose="on"/> -->
+    <jflex file="${src.dir}/edu/bmrb/sans/star.flex" verbose="on"/>
+  </target>
+  
+  <target name="compile" depends="init, scanner"
+   description="compile sans classes">
+    <antcall target="compile.${build-type}"/>
+  </target>
+
+  <target name="compile.debug">
+    <replace summary="yes" dir="${src.dir}"
+             token="boolean DEBUG = false;"
+	     value="boolean DEBUG = true;">
+      <include name="**/*.java"/>
+    </replace>
+    <javac srcdir="${src.dir}" destdir="${build.dir}"
+           debug="on" source="1.5">
+      <compilerarg line="-g -deprecation -Xlint:all"/>
+    </javac>
+  </target>
+
+  <target name="compile.devel">
+    <javac srcdir="${src.dir}" destdir="${build.dir}"
+           debug="on" source="1.5">
+      <compilerarg line="-g -deprecation -Xlint:all"/>
+    </javac>
+  </target>
+
+  <target name="compile.release">
+    <replace summary="yes" dir="${src.dir}"
+             token="boolean DEBUG = true;"
+	     value="boolean DEBUG = false;">
+      <include name="**/*.java"/>
+    </replace>
+    <javac srcdir="${src.dir}" destdir="${build.dir}"
+           optimize="on" source="1.5">
+      <compilerarg line="-g:none -nowarn"/>
+    </javac>
+  </target>
+
+  <target name="jar" description="create JAR" depends="compile">
+    <jar destfile="${dist.dir}/${jar-name}">
+      <fileset dir="${build.dir}" includes="**/*.class"/>
+    </jar>
+  </target>
+
+  <target name="tar" description="create tarball with source and build files" depends="clean, init">
+    <tar destfile="${dist.dir}/sans.${DSTAMP}.tar">
+      <tarfileset dir="${src.dir}" prefix="sans/src">
+        <include name="**/*.java"/>
+        <include name="**/*.html"/>
+      </tarfileset>
+      <tarfileset dir="${doc.dir}" prefix="sans/doc">
+        <include name="DESCRIPTION"/>
+      </tarfileset>
+      <tarfileset dir="${basedir}" prefix="sans">
+        <include name="build.xml"/>
+        <include name="README"/>
+        <include name="COPYRIGHT"/>
+      </tarfileset>
+    </tar>
+    <gzip destfile="${dist.dir}/sans.${DSTAMP}.tar.gz" src="${dist.dir}/sans.${DSTAMP}.tar"/>
+    <delete file="${dist.dir}/sans.${DSTAMP}.tar"/>
+  </target>
+
+  <target name="javadoc" description="generate API Javadoc">
+    <mkdir dir="${javadoc.dir}"/>
+    <javadoc destdir="${javadoc.dir}"
+             verbose="no"
+	     author="false"
+	     version="false"
+	     use="false"
+	     windowtitle="SANS API"
+	     doctitle="SANS API"
+	     bottom="&lt;EM&gt;Copyright &#169; 2005-2006 Board of Regents, University of Wisconsin. All Rights Reserved.&lt;/EM&gt;">
+      <fileset dir="${src.dir}" includes="**/*.java"/>
+    </javadoc>
+  </target>
+  
+  <target name="clean" description="cleanup">
+    <delete dir="${javadoc.dir}"/>
+    <delete>
+      <fileset dir="${build.dir}" includes="**/*.class"/>
+      <fileset dir="${src.dir}" includes="**/*~" defaultexcludes="no"/>
+    </delete>
+  </target>
+</project>
